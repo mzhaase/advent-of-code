@@ -32,6 +32,8 @@ def solve_one(x, values, operator, operators, target):
     if len(values) == 0:
         return x == target
     _ = operators[operator](x, values[0])
+    if _ > target:
+        return False
     return any([solve_one(_, values[1:], operator, operators, target) for operator in operators.keys()])
 
 

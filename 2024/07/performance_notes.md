@@ -33,5 +33,6 @@ Instead of doing 'int(f'{x}{y}') for concatenate, one can do `x * 10**ceil(log10
 
 Using @lru_cache on the add, concatenate and multiply functions actually slows down the code to 2.5s
 
-Single-process using recursive function: 10.7s.
-Multi-process with recursive function: 1.7s
+Single-process using recursive function: 5.2s.
+Multi-process with recursive function: 0.9s
+Using pypy, part 2 now runs in 0.68s. But part 1 runs in .62s instead of .08s.
