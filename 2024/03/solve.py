@@ -1,7 +1,7 @@
 import re
 import timeit
 
-with open('/home/mattis/hobbies/advent-of-code/2024/03/input', 'r') as f:
+with open('./input', 'r') as f:
     content = f.read()
 
 def without_split():

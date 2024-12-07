@@ -1,15 +1,7 @@
-import itertools
+Part 2 only:
 
-from time import time as time
-
-debug = False
-
-inputs = []
-with open('./input', 'r') as f:
-    for line in f:
-        values = list(map(int, line.strip().replace(':','').split(' ')))
-        inputs.append((values[0], values[1:]))
-
+using naive algorithm:
+```
 def solve(inputs, operators):
     answer = 0
     for k, values in inputs:
@@ -29,21 +21,12 @@ def solve(inputs, operators):
                 answer += k
                 break
     return answer
+```
+Using `if _ > k: break`: 18.696s
+Not using this line: 20.106s
 
-operators_part_one = {
-    '+': lambda x, y: x + y,
-    '*': lambda x, y: x * y
-}
-operators_part_two = {
-    '+': lambda x, y: x + y,
-    '*': lambda x, y: x * y,
-    '|': lambda x, y: int(f'{x}{y}')
-}
+Using multithreading with ThreadPoolExecutor, with one thread per input: 32s
 
+Using multiprocessing with ProcessPoolExecutor, one thread per input: 2.923s
 
-start_time = time()
-print(f'Part 1 solution: {solve(inputs, operators_part_one)}')
-print(f'Execution time: {time() - start_time}')
-start_time = time()
-print(f'Part 2 solution: {solve(inputs, operators_part_two)}')
-print(f'Execution time: {time() - start_time}')
+Instead of doing 'int(f'{x}{y}') for concatenate, one can do `x * 10**ceil(log10(y+1)) + y`. This basically adds an amount of 0s at the end of x that is equal to the length of y, then adding y to it is the same as concatenating. Reduced time to 2.330s.
