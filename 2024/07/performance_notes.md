@@ -30,3 +30,8 @@ Using multithreading with ThreadPoolExecutor, with one thread per input: 32s
 Using multiprocessing with ProcessPoolExecutor, one thread per input: 2.923s
 
 Instead of doing 'int(f'{x}{y}') for concatenate, one can do `x * 10**ceil(log10(y+1)) + y`. This basically adds an amount of 0s at the end of x that is equal to the length of y, then adding y to it is the same as concatenating. Reduced time to 2.330s.
+
+Using @lru_cache on the add, concatenate and multiply functions actually slows down the code to 2.5s
+
+Single-process using recursive function: 10.7s.
+Multi-process with recursive function: 1.7s

@@ -1,9 +1,5 @@
-import cProfile
-import itertools
-import pstats
-
-
 from concurrent.futures import ProcessPoolExecutor
+from functools import cache
 from math import ceil, log10
 from time import time as time
 
@@ -14,18 +10,13 @@ with open('./input', 'r') as f:
     for line in f:
         values = list(map(int, line.strip().replace(':','').split(' ')))
         inputs.append((values[0], values[1:]))
-# @lru_cache
+
 def add(x, y):
     return x + y
 
-# @lru_cache
 def multiply(x, y):
     return x * y
 
-def concatenate(x, y):
-    return int(f'{x}{y}')
-
-# @lru_cache
 def concatenate_log(x,y):
     return x * 10**ceil(log10(y+1)) + y
 
@@ -39,31 +30,29 @@ operators_part_two = {
     '|': concatenate_log
 }
 
-# multithreading solution
-def solve_single(k, values, operators):
-    operations = list(itertools.product(operators.keys(), repeat=len(values) - 1))
-    for operation in operations:
-        for idx, value in enumerate(values):
-            if idx == 0:
-                _ = value
-                continue
-            _ = operators[operation[idx - 1]](_, value)
-            if _ > k: break
-        if _ == k:
-            return k
+def solve_one(x, values, operator, operators, target):
+    if len(values) == 0:
+        return x == target
+    _ = operators[operator](x, values[0])
+    return any([solve_one(_, values[1:], operator, operators, target) for operator in operators.keys()])
+
+def multiprocessing_shim(target, input, operators):
+    for operator in operators.keys():
+        if solve_one(input[0], input[1:], operator, operators, target):
+            return target
     return 0
 
-def solve_multithread(inputs, operators):
+def solve_multiprocess(inputs, operators):
     answer = 0
     with ProcessPoolExecutor() as executor:
-        futures = [executor.submit(solve_single, k, values, operators) for k, values in inputs]
+        futures = [executor.submit(multiprocessing_shim, target, input, operators) for target, input in inputs]
         for future in futures:
             answer += future.result()
     return answer
 
 start_time = time()
-print(f'Part 1 solution: {solve_multithread(inputs, operators_part_one)}')
+print(f'Part 1 solution: {solve_multiprocess(inputs, operators_part_one)}')
 print(f'Execution time: {time() - start_time}')
 start_time = time()
-print(f'Part 2 solution: {solve_multithread(inputs, operators_part_two)}')
+print(f'Part 2 solution: {solve_multiprocess(inputs, operators_part_two)}')
 print(f'Execution time: {time() - start_time}')
