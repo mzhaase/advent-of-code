@@ -30,10 +30,7 @@ def iterate(iterations, stones):
             else:
                 _[stone * 2024] += stones[stone]
         stones = deepcopy(_)
-    ans = 0
-    for k, v in stones.items():
-        ans += v
-    return ans
+    return sum(stones.values())
 
 start_time = time()
 print(f'Part 1: {iterate(25, deepcopy(stones))}')
