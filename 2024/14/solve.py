@@ -3,9 +3,7 @@ Given robots with an x,y position and an x,y speed. calculate their
 location after x seconds, when the map wraps around
 """
 
-from scipy.stats import entropy
-
-debug    = True
+debug    = False
 fn       = 'input'
 map_size = {
     'sample_12': (11,7),
@@ -62,19 +60,17 @@ def get_robots_per_quadrant(positions):
 
     return quadrant_sums
 
-# positions = get_robot_positions(robots, 100)
-# if debug: print(print_map(positions))
+positions = get_robot_positions(robots, 100)
+if debug: print(print_map(positions))
 
-# ans1 = 1
-# for q in get_robots_per_quadrant(positions):
-#     ans1 *= q
-# print(ans1)
+ans1 = 1
+for q in get_robots_per_quadrant(positions):
+    ans1 *= q
+print(ans1)
 
 for i in range(8, 10000, 101):
     print(f'Iteration: {i}')
     # print_map(get_robot_positions(robots, i))
     positions = get_robot_positions(robots, i)
-    robot_map = print_map(positions)
-    # calculate entropy of the map
-    print(entropy([x for x in robot_map if x != '.']))
+    print(print_map(positions))
 
