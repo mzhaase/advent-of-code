@@ -78,7 +78,7 @@ print('Part 2')
 # digit is correct, then the second to last, etc
 # because there are some dead branches in the tree of possibilities.
 # if j equals a multiple of 8, it will change the digit one level up.
-i = 15
+i = 14
 j = 1
 k = 0
 while True:
@@ -89,8 +89,9 @@ while True:
     if output == program:
         print(A)
         break
-
-    if output[i] == program[i]:
+    if len(output) != len(program):
+        continue
+    if output[i+1] == program[i+1]:
         i -= 1
         k = A
         j = 1
